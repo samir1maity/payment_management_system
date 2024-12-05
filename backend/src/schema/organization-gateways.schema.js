@@ -7,9 +7,9 @@ const orgGatewaysSchema = new Schema({
     gateway_id: { type: Types.ObjectId, required: true, ref: 'Gateway' }, //Foreign Key to PaymentGateways
     key: { type: String, required: true, unique: true },
     secret: { type: String, required: true, unique: true },
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now },
-})
+    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+},
+    { timestamps: true })
 
 const orgGatewaysModel = model('organizations_gateway', orgGatewaysSchema)
 

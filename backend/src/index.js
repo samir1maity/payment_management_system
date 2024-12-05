@@ -2,15 +2,19 @@ const express = require('express')
 const Razorpay = require("razorpay");
 const cors = require('cors')
 require('dotenv').config()
+const mongoose = require('mongoose');
 const { userRouter } = require('./routes/user.route')
-const mongoose = require('mongoose')
+const { orgRouter } = require('./routes/org.route')
+const { orgGatewaysRouter } = require('./routes/org-gateways.route');
 
 const app = express()
 
 app.use(express.json())
 app.use(cors())
 
-app.use('/api/v1', userRouter)
+app.use('/api/v1/user', userRouter)
+app.use('/api/v1/organizations', orgRouter)
+app.use('/api/v1/org-gateways', orgGatewaysRouter)
 
 
 const razorpayInstance = new Razorpay({
@@ -139,8 +143,8 @@ app.post('/payment-success', (req, res) => {
 async function main() {
     await mongoose.connect(process.env.DATABASE_URL)
 
-    app.listen(3000, () => {
-        console.log('server is running at 3000')
+    app.listen(3001, () => {
+        console.log('server is running at 3001')
     })
 }
 

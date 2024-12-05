@@ -4,9 +4,8 @@ const { model, Schema, Types } = mongoose
 
 const gatewaysSchema = new Schema({
     gateway_name: { type: String, required: true, unique: true },
-    created_at: { type: Date, default: Date.now }, 
-    updated_at: { type: Date, default: Date.now },
-})
+    description: { type: String }, // Optional: A brief about the gateway
+}, { timestamps: true })
 
 const gatewaysModel = model('gateway', gatewaysSchema)
 

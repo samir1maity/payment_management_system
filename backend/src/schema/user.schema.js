@@ -7,10 +7,9 @@ const userSchema = new Schema({
     password: { type: String, required: true },
     firstName: { type: String },
     lastName: { type: String },
-    token: { type: String, unique: true },
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now },
-})
+},
+    { timestamps: true }
+)
 
 const userModel = model('user', userSchema)
 

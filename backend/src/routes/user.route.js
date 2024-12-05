@@ -52,9 +52,13 @@ userRouter.post('/signin', async function (req, res) {
     }
 })
 
+
+
 userRouter.post('/signup', async function (req, res) {
 
     try {
+        console.log('flow reached here');
+        
         const { username, password, firstName, lastName } = req.body
 
         if (!username || !password) {
@@ -66,6 +70,8 @@ userRouter.post('/signup', async function (req, res) {
             return
         }
 
+        console.log('password', password, "username", username)
+
         const hashedPassword = await bcypt.hash(password, 10)
 
         const data = await userModel.create({
@@ -74,6 +80,8 @@ userRouter.post('/signup', async function (req, res) {
             firstName,
             lastName
         })
+
+        console.log('data', data)
 
         res.status(201).json({
             success: true,
