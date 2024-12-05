@@ -1,12 +1,12 @@
-const { orgModel } = require('../schema/organization.schema')
+const { orgGatewaysModel } = require('../schema/organization-gateways.schema')
 
 const create = async (data) => {
     try {
         console.log('data', data)
         //TODO: validate data
-        const { organization_name, userId } = data
+        const { organization_id, userId } = data
 
-        const org = await orgModel.create({
+        const org = await orgGatewaysModel.create({
             organization_name,
             admin: userId
         })
@@ -24,7 +24,7 @@ const update = async (data) => {
         console.log('id', id, 'organization_name', organization_name)
 
 
-        const updatedOrgDetails = await orgModel.findByIdAndUpdate(
+        const updatedOrgDetails = await orgGatewaysModel.findByIdAndUpdate(
             id, // The ID of the document to update
             { organization_name }, // The fields to update
             { new: true } // Options: `new: true` returns the updated document
