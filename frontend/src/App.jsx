@@ -13,45 +13,40 @@ function App() {
     setError("");
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/get-razorpay-script",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            amount: 400,
-            currency: "INR",
-            receiptId: "abcd",
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3001/payment-popup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: 400,
+          currency: "INR",
+          receiptId: "abcd",
+        }),
+      });
 
       const result = await response.json();
+      console.log("result", result);
 
       if (!response.ok) {
         throw new Error("Failed to fetch Razorpay script.");
       }
 
-      if (!document.querySelector(`script[src="${result.url}"]`)) {
-        const script = document.createElement("script");
-        script.src = result.url;
-        script.async = true;
-        script.onload = () => {
-          const scriptTwo = document.createElement("script");
-          scriptTwo.innerHTML = result.script;
-          document.body.appendChild(scriptTwo);
-        };
-        script.onerror = () => {
-          throw new Error("Failed to load library.");
-        };
-        document.body.appendChild(script);
-      } else {
-        const scriptTwo = document.createElement("script");
-        scriptTwo.innerHTML = result.script;
-        document.body.appendChild(scriptTwo);
-      }
+      /*****************************************************************/
+
+      const { handler, options } = result;
+
+      const handlerFunction = new Function(`return ${handler}`)();
+      const razorPayOptions = {
+        ...options,
+        handler: handlerFunction, 
+      };
+
+      console.log("razorPayOptions", razorPayOptions);
+      const rzp1 = new window.Razorpay(razorPayOptions);
+      rzp1.open();
+
+      /******************************************************************/
 
       setLoading(false);
     } catch (error) {
@@ -66,7 +61,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/get-razorpay-paymentLink",
+        "http://localhost:3001/get-razorpay-paymentLink",
         {
           method: "POST",
           headers: {
@@ -83,7 +78,7 @@ function App() {
       const result = await response.json();
 
       console.log("result", result);
-      window.location.href=result.url
+      window.location.href = result.url;
 
       if (!response.ok) {
         throw new Error("Failed to fetch Razorpay script.");
@@ -98,10 +93,18 @@ function App() {
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
       />
-      <button style={{border:"1px solid"}} onClick={handlePayment} disabled={loading}>
+      <button
+        style={{ border: "1px solid" }}
+        onClick={handlePayment}
+        disabled={loading}
+      >
         {loading ? "Processing..." : "Pay with Razorpay using pop-up"}
       </button>
-      <button style={{border:"1px solid"}} onClick={handlePaymentUsingLink} disabled={loading}>
+      <button
+        style={{ border: "1px solid" }}
+        onClick={handlePaymentUsingLink}
+        disabled={loading}
+      >
         {loading ? "Processing..." : "Pay with Razorpay using Redirect Link"}
       </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
