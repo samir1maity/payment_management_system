@@ -1,9 +1,9 @@
-const { create, update } = require('../services/org.services')
+const { createGateways, update } = require('../services/gateways.services')
+
 //create
-const createOrgGateways = async (req, res) => {
+const createGateways = async (req, res) => {
     console.log('flow reached here')
     try {
-        req.body.userId = req.userId
         const response = await create(req.body)
         return res.status(201).json({
             success: true,
@@ -23,7 +23,7 @@ const createOrgGateways = async (req, res) => {
 }
 
 //update
-const updateOrgGateways = async (req, res) => {
+const updateGateways = async (req, res) => {
     try {
         const data = {id : req.params.id , organization_name: req.body.organization_name }
         const response = await update(data)
@@ -46,4 +46,4 @@ const updateOrgGateways = async (req, res) => {
 
 //get
 
-module.exports = { createOrgGateways, updateOrgGateways };
+module.exports = { createGateways, updateGateways };
